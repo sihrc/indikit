@@ -1,10 +1,5 @@
-.page-with-sidebar {
-  background: #292E33;
-
-  .sidebar-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-  }
+.main {
+  display: flex;
+  flex-direction: row;
+  justify: space-around;
 }

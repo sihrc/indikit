@@ -22,18 +22,13 @@ var image_api_names = [
 ];
 
 var SideBar = React.createClass({
-  getInitialState: function() {
-    return {
-      sidebarOpen: true,
-      docked: true
-    };
-  },
-
+  // handle: function(e) {},
   render: function() {
+    var _this = this;
     var text_apis = [];
     text_api_names.forEach(function (each) {
       text_apis.push((<li className="tier-2">
-        <a id="api">
+        <a id={_this.props.format_api(each)} onClick={_this.props.handle(each, "text")}>
           {each}
         </a>
       </li>))
@@ -42,7 +37,7 @@ var SideBar = React.createClass({
     var image_apis = [];
     image_api_names.forEach(function (each) {
       image_apis.push((<li className="tier-2">
-        <a id="api">
+        <a id={_this.props.format_api(each)} onClick={_this.props.handle(each, "image")}>
           {each}
         </a>
       </li>))

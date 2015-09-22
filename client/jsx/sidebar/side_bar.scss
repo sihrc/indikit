@@ -1,7 +1,10 @@
 .sidebar-wrapper {
+  display:flex;
+  flex-direction:column;
   z-index: 99;
   background: #292E33;
   min-width: 260px;
+  height: 100vh;
 }
 
 .nav-sidebar li a {
@@ -30,4 +33,10 @@
 
 .nav-sidebar .tier-2 {
   border-left: 20px solid #292E33;
+}
+
+.nav-sidebar .active {
+  background: #292E33;
+  color: #666666;
+  cursor: default;
 }
