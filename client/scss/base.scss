@@ -1,0 +1,19 @@
+body {
+  margin: 0px;
+  font-family: 'Lato', sans-serif;
+  line-height: 1.5;
+}
+
+form {
+  margin: 0;
+}
+
+#indico {
+  display: flex;
+  align-items: left;
+}
+
+// This allows Firefox to give the contenteditable some height.
+[contenteditable='true']:before {
+  content: "\feff ";
+}
