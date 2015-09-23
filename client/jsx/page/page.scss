@@ -33,6 +33,15 @@
       background: #292E33;
       color: #F4F8FA;
     }
+
+    .disabled {
+      background: #F3F3F3;
+    }
+
+    .disabled:hover {
+      background: #F3F3F3;
+      color: #292E33;
+    }
   }
 
   a:hover {
@@ -104,15 +113,12 @@ textarea {
   border: solid 1px #AAAAB2;
   border-radius: 5px;
   margin-bottom: 10px;
+  min-height: 10em;
 }
 textarea:focus,
 textarea.focus {
   border: solid 1px #292E33;
   box-shadow: 0 0 5px 1px #969696;
-}
-
-#base64 {
-  min-height: 10em;
 }
 
 #apikey {

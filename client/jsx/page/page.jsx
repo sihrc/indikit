@@ -7,7 +7,7 @@ FR.onload = function(e) {
   $('#base64').trigger('input');
 };
 
-var loadUrl = function (e) {
+var loadUrl = function(e) {
   if (e.keyCode == 13) {
     convertImgToBase64URL($(e.target).val(), function(base64) {
       $("#base64").val(base64.substr(base64.indexOf(',') + 1));
@@ -22,17 +22,23 @@ var Page = React.createClass({
       keyargs: {}
     };
   },
-  runAPI: function(e) {
+  callAPI: function(e) {
+    var $target = $(e.target);
+    $target.prop('disabled', true);
+    $target.toggleClass("disabled");
+
     var postPackage = this.state["keyargs"];
-    postPackage["data"] = this.props.api.type === "image" ?
-        $("#base64").val() : $("#textdata").val();
-    $.post(this.props.api.api_name, {
-      data: postPackage,
-      cloud: $("#cloud").val(),
-      key: $("apikey").val()
-    }, function (data, status) {
-      $("#status").val(data["status"]);
-      $("#results").val(data["results"]);
+    postPackage["data"] = this.props.api.type === "image"
+      ? $("#base64").val()
+      : $("#textdata").val();
+    postPackage["cloud"] = $("#cloud").val();
+    postPackage["key"] = $("#apikey").val();
+
+    $.post("/api/" + this.props.api.name, postPackage, function(data, status) {
+      $("#status").text(status.toUpperCase());
+      $("#results").val(data.results);
+      $target.prop("disabled", false);
+      $target.toggleClass("disabled");
     });
   },
   addKeywordArg: function(e) {
@@ -54,18 +60,19 @@ var Page = React.createClass({
     delete _state["keyargs"][$target.attr("id")];
     this.setState(_state);
   },
-  onDrop: function (files) {
-    console.log(files[0]);
-    FR.readAsDataURL( files[0] );
+  onDrop: function(files) {
+    FR.readAsDataURL(files[0]);
   },
   componentDidUpdate: function() {
     $("#imageurl").keyup(loadUrl);
   },
   render: function() {
     var _this = this;
-    var renderKeyword = function (key) {
+    var renderKeyword = function(key) {
       return (
-        <button id={key} onClick={_this.removeKey}>{key} : {_this.state[key]}</button>
+        <button id={key} onClick={_this.removeKey}>{key}
+          :
+          {_this.state[key]}</button>
       )
     };
 
@@ -73,7 +80,7 @@ var Page = React.createClass({
       return (
         <div className="data">
           <h5>Text Data</h5>
-          <textarea id="textdata" wrap="soft" rows="1"></textarea>
+          <textarea id="textdata" rows="1" wrap="soft"></textarea>
         </div>
       )
     };
@@ -81,16 +88,16 @@ var Page = React.createClass({
     var imageData = function() {
       return (
         <div className="data">
-          <Dropzone
-             className="dropzone"
-             activeClassName="dropzoneactive"
-             onDrop={_this.onDrop}>
-            <div> Try dropping some files here, or click to select files to upload.</div>
+          <Dropzone activeClassName="dropzoneactive" className="dropzone" onDrop={_this.onDrop}>
+            <div>
+              Try dropping some files here, or click to select files to upload.</div>
           </Dropzone>
-          <h5> Image URL</h5>
-          <input id="imageurl" type="text" placeholder="URL"></input>
-          <h5> Base64 Data</h5>
-          <textarea id="base64" wrap="soft" rows="1"></textarea>
+          <h5>
+            Image URL</h5>
+          <input id="imageurl" placeholder="URL" type="text"></input>
+          <h5>
+            Base64 Data</h5>
+          <textarea id="base64" rows="1" wrap="soft"></textarea>
         </div>
       )
     }
@@ -98,28 +105,39 @@ var Page = React.createClass({
     return (
       <div className="page">
         <h1>{this.props.api.title}</h1>
-        <p> <span> REQUEST </span> </p>
-        {this.props.api.type === "text" ? textData() : imageData()}
+        <p>
+          <span>
+            REQUEST
+          </span>
+        </p>
+        {this.props.api.type === "text"
+          ? textData()
+          : imageData()}
         <h5>Keywords Arguments</h5>
         <div className="keyarg-input">
-          <input id="key" type="text" placeholder="Key"></input>
-          <input id="value" type="text" placeholder="Value"></input>
+          <input id="key" placeholder="Key" type="text"></input>
+          <input id="value" placeholder="Value" type="text"></input>
           <a id="addkey" onClick={this.addKeywordArg}>Add</a>
         </div>
         <div className="keyargs">{Object.keys(this.state["keyargs"]).map(renderKeyword)}</div>
         <hr></hr>
-        <p> <span> RESULTS </span> </p>
-        <h5>Status Code: <span id="status">?</span></h5>
-        <textarea id="results" readOnly wrap="soft" rows="1"></textarea>
+        <p>
+          <span>
+            RESULTS
+          </span>
+        </p>
+        <h5>Status Code:
+          <span id="status">  ?</span>
+        </h5>
+        <textarea id="results" readOnly rows="1" wrap="soft"></textarea>
         <div className="footer">
-            <input id="apikey" type="text" placeholder="API Key"></input>
-            <input id="cloud" type="text" placeholder="Cloud"></input>
-            <button className="submit" onClick={this.runAPI}>Run</button>
+          <input id="apikey" placeholder="API Key" type="text"></input>
+          <input id="cloud" placeholder="Cloud" type="text"></input>
+          <button className="submit" id="submit" onClick={this.callAPI}>Run</button>
         </div>
       </div>
     );
   }
 });
-
 
 module.exports = Page;

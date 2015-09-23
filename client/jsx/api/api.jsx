@@ -13,7 +13,7 @@ var get_api = function get_api(name, type) {
   var api_name = format_api(name);
   return {
     "title": name,
-    "api": api_name,
+    "name": api_name,
     "type": type
   };
 };
@@ -22,7 +22,7 @@ var Api = React.createClass({
   getInitialState: function () {
     return {
       title: "Sentiment",
-      api: "sentiment",
+      name: "sentiment",
       type: "text"
     };
   },
