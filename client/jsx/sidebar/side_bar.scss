@@ -1,42 +1,41 @@
 .sidebar-wrapper {
   display:flex;
   flex-direction:column;
-  z-index: 99;
+  flex: 0 0 12em;
+  order: -1;
   background: #292E33;
   min-width: 260px;
-  height: 100vh;
+  min-height: 100vh;
 }
 
-.nav-sidebar li a {
-  color: #F4F8FA;
-}
+.nav-sidebar {
+  li a {
+    color: #F4F8FA;
+  }
 
-.nav-sidebar li a:hover {
-  color: #292E33;
-  cursor: pointer;
-}
+  li a:hover {
+    color: #292E33;
+    cursor: pointer;
+  }
 
-.nav-sidebar .tier-1 a {
-  font-size: 1.3em;
-  color: #666666
-}
-
-.nav-sidebar .tier-1 a:hover {
-  background: #292E33;
-  color: #666666;
-  cursor: default;
-}
-
-.nav-sidebar .tier-2:hover {
-  border-left: 20px solid #F4F8FA;
-}
-
-.nav-sidebar .tier-2 {
-  border-left: 20px solid #292E33;
-}
-
-.nav-sidebar .active {
-  background: #292E33;
-  color: #666666;
-  cursor: default;
+  .tier-1 a {
+    font-size: 1.3em;
+    color: #666666
+  }
+  .tier-1 a:hover {
+    background: #292E33;
+    color: #666666;
+    cursor: default;
+  }
+  .tier-2:hover {
+    border-left: 20px solid #F4F8FA;
+  }
+  .tier-2 {
+    border-left: 20px solid #292E33;
+  }
+  .active {
+    background: #292E33;
+    color: #666666;
+    cursor: default;
+  }
 }

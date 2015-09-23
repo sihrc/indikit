@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/sihrc/indikit#readme",
   "dependencies": {
+    "attr-accept": "^1.0.1",
     "autoprefixer": "^6.0.3",
     "body-parser": "^1.14.0",
     "browserify": "^11.1.0",
@@ -42,8 +43,6 @@
     "morgan": "^1.6.1",
     "path": "^0.12.7",
     "react": "^0.13.3",
-    "react-sidebar": "^1.0.4",
-    "react-tools": "^0.13.3",
     "reactify": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"

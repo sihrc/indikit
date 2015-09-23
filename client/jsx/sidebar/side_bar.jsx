@@ -44,7 +44,7 @@ var SideBar = React.createClass({
     });
 
     return (
-      <div className="sidebar-wrapper">
+      <nav className="sidebar-wrapper">
         <ul className="nav nav-sidebar">
           <li className="tier-1">
             <a> Text </a>
@@ -61,7 +61,7 @@ var SideBar = React.createClass({
               {image_apis}
             </ul>
         </ul>
-      </div>
+      </nav>
     );
   }
 });

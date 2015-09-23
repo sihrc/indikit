@@ -1,4 +1,120 @@
 .page {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  padding: 40px;
+
+  .data {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+    margin-top: 50px;
+    .submit {
+      padding: 10px;
+      border: solid 1px #dcdcdc;
+      transition: box-shadow 0.3s, border 0.3s;
+      text-align: center;
+      margin-bottom: 20px;
+      margin-right:10px;
+      border-radius: 5px;
+      width: 150px;
+      background: none;
+    }
+
+    .submit:hover {
+      background: #292E33;
+      color: #F4F8FA;
+    }
+  }
+
+  a:hover {
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  p {
+    font-size: 1em;
+    color: #6875B2;
+    background: #6875B2; height:1px; margin-top:40px; margin-bottom: 10px;
+    span {
+      background: #fff; padding:3px; position:relative; top:-11px; left: 20px
+    }
+  }
+
+  input[type="text"] {
+    padding: 10px;
+    border: solid 1px #dcdcdc;
+    transition: box-shadow 0.3s, border 0.3s;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-right:10px;
+    border-radius: 5px;
+  }
+
+  input[type="text"]:focus,
+  input[type="text"].focus {
+    border: solid 1px #292E33;
+    box-shadow: 0 0 5px 1px #969696;
+  }
+
+  .keyarg-input {
+    flex-direction: row;
+    input[type="text"] {
+      padding: 5px;
+    }
+    a {
+      padding: 10px;
+    }
+  }
+  .keyargs {
+    button {
+      padding: 15px;
+      min-width: 5em;
+    }
+  }
+}
+
+.dropzone {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align:center;
+  border: dashed 2px #292E33;
+  padding: 20px
+}
+
+.dropzoneactive {
+  border: dashed 3px #292E33;
+}
+
+textarea {
+  font-family: "Montserrat" sans-serif;
+  font-weight: 200;
+  resize: none;
+  padding: 15px;
+  max-height: 20em;
+  word-break: break-word;
+  border: solid 1px #AAAAB2;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+textarea:focus,
+textarea.focus {
+  border: solid 1px #292E33;
+  box-shadow: 0 0 5px 1px #969696;
+}
+
+#base64 {
+  min-height: 10em;
+}
+
+#apikey {
+  width: 280px;
 }

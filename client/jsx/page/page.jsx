@@ -1,12 +1,125 @@
+var Dropzone = require("./dropzone.jsx");
+
+var FR = new FileReader();
+FR.onload = function(e) {
+  var result = e.target.result;
+  $("#base64").val(result.substr(result.indexOf(',') + 1));
+  $('#base64').trigger('input');
+};
+
+var loadUrl = function (e) {
+  if (e.keyCode == 13) {
+    convertImgToBase64URL($(e.target).val(), function(base64) {
+      $("#base64").val(base64.substr(base64.indexOf(',') + 1));
+    });
+  }
+}
+
 var Page = React.createClass({
   displayName: "Page",
+  getInitialState: function() {
+    return {
+      keyargs: {}
+    };
+  },
+  runAPI: function(e) {
+    var postPackage = this.state["keyargs"];
+    postPackage["data"] = this.props.api.type === "image" ?
+        $("#base64").val() : $("#textdata").val();
+    $.post(this.props.api.api_name, {
+      data: postPackage,
+      cloud: $("#cloud").val(),
+      key: $("apikey").val()
+    }, function (data, status) {
+      $("#status").val(data["status"]);
+      $("#results").val(data["results"]);
+    });
+  },
+  addKeywordArg: function(e) {
+    var _state = this.state;
+    var key = $("#key").val();
+    var value = $("#value").val();
+    if (key && value) {
+      _state["keyargs"][key.trim()] = value.trim();
+      $("#key").val("");
+      $("#value").val("");
+      $("#key").focus();
+    }
+    this.setState(_state);
+  },
+  removeKey: function(e) {
+    var _state = this.state;
+    var $target = $(e.target);
+
+    delete _state["keyargs"][$target.attr("id")];
+    this.setState(_state);
+  },
+  onDrop: function (files) {
+    console.log(files[0]);
+    FR.readAsDataURL( files[0] );
+  },
+  componentDidUpdate: function() {
+    $("#imageurl").keyup(loadUrl);
+  },
   render: function() {
+    var _this = this;
+    var renderKeyword = function (key) {
+      return (
+        <button id={key} onClick={_this.removeKey}>{key} : {_this.state[key]}</button>
+      )
+    };
+
+    var textData = function() {
+      return (
+        <div className="data">
+          <h5>Text Data</h5>
+          <textarea id="textdata" wrap="soft" rows="1"></textarea>
+        </div>
+      )
+    };
+
+    var imageData = function() {
+      return (
+        <div className="data">
+          <Dropzone
+             className="dropzone"
+             activeClassName="dropzoneactive"
+             onDrop={_this.onDrop}>
+            <div> Try dropping some files here, or click to select files to upload.</div>
+          </Dropzone>
+          <h5> Image URL</h5>
+          <input id="imageurl" type="text" placeholder="URL"></input>
+          <h5> Base64 Data</h5>
+          <textarea id="base64" wrap="soft" rows="1"></textarea>
+        </div>
+      )
+    }
+
     return (
       <div className="page">
         <h1>{this.props.api.title}</h1>
+        <p> <span> REQUEST </span> </p>
+        {this.props.api.type === "text" ? textData() : imageData()}
+        <h5>Keywords Arguments</h5>
+        <div className="keyarg-input">
+          <input id="key" type="text" placeholder="Key"></input>
+          <input id="value" type="text" placeholder="Value"></input>
+          <a id="addkey" onClick={this.addKeywordArg}>Add</a>
+        </div>
+        <div className="keyargs">{Object.keys(this.state["keyargs"]).map(renderKeyword)}</div>
+        <hr></hr>
+        <p> <span> RESULTS </span> </p>
+        <h5>Status Code: <span id="status">?</span></h5>
+        <textarea id="results" readOnly wrap="soft" rows="1"></textarea>
+        <div className="footer">
+            <input id="apikey" type="text" placeholder="API Key"></input>
+            <input id="cloud" type="text" placeholder="Cloud"></input>
+            <button className="submit" onClick={this.runAPI}>Run</button>
+        </div>
       </div>
     );
   }
 });
+
 
 module.exports = Page;
