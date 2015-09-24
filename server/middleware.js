@@ -8,8 +8,8 @@ var logger = require("morgan"),
 
 module.exports = function (app) {
   app.use(logger("indikit"));
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json({limit: '70mb'}));
+  app.use(bodyParser.urlencoded({limit: '70mb', extended: true}));
   app.use(cookieParser());
   app.use(session({
     secret: "secret",

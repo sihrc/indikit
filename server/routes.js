@@ -15,7 +15,7 @@ module.exports = function (app) {
     var post = req.body;
     var key = get(post, "key");
     var data = get(post, "data");
-
+    console.log("Request made", "API:", api, "Post", req.body, "Key", key, "data", data);
     indico.apiKey = key;
     if (api in indico) {
       indico[api](data, post).then(function(result) {
