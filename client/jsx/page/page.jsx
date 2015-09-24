@@ -39,7 +39,11 @@ var Page = React.createClass({
       $("#results").val(data.results);
       $target.prop("disabled", false);
       $target.toggleClass("disabled");
-    });
+  }).error(function(err) {
+      $target.prop("disabled", false);
+      $target.toggleClass("disabled");
+      alert("An error occurred! Sorry about that. Let us know!");
+  });
   },
   addKeywordArg: function(e) {
     var _state = this.state;
