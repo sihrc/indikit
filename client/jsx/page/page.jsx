@@ -24,6 +24,10 @@ var Page = React.createClass({
   },
   callAPI: function(e) {
     var $target = $(e.target);
+    if ($("#apikey").val() === "") {
+        $("#apikey").focus();
+        return;
+    }
     $target.prop('disabled', true);
     $target.toggleClass("disabled");
 
@@ -135,8 +139,8 @@ var Page = React.createClass({
         </h5>
         <textarea id="results" readOnly rows="1" wrap="soft"></textarea>
         <div className="footer">
-          <input id="apikey" placeholder="API Key" type="text"></input>
-          <input id="cloud" placeholder="Cloud" type="text"></input>
+            <input id="apikey" placeholder="Enter Your API Key" type="text"></input>
+            <input id="cloud" placeholder="Cloud (optional)" type="text"></input>
           <button className="submit" id="submit" onClick={this.callAPI}>Run</button>
         </div>
       </div>
