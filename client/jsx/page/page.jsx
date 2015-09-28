@@ -115,6 +115,11 @@ var Page = React.createClass({
     return (
       <div className="page">
         <h1>{this.props.api.title}</h1>
+        <a target="_blank" href={
+            this.props.api.type === "text"
+            ? "https://indico.io/docs#text"
+            : "https://indico.io/docs#image"
+          }>More Info</a>
         <p>
           <span>
             REQUEST
