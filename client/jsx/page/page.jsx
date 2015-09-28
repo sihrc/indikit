@@ -25,6 +25,7 @@ var Page = React.createClass({
   },
   callAPI: function(e) {
     var $target = $(e.target);
+    var state = this.state;
     if ($("#apikey").val() === "") {
         $("#apikey").focus();
         return;
@@ -32,7 +33,7 @@ var Page = React.createClass({
     $target.prop('disabled', true);
     $target.toggleClass("disabled");
 
-    var postPackage = this.state["keyargs"];
+    var postPackage = jQuery.extend({}, state["keyargs"]);
     postPackage["data"] = this.props.api.type === "image"
       ? $("#base64").val()
       : $("#textdata").val();
@@ -42,7 +43,8 @@ var Page = React.createClass({
     $.post("/api/" + this.props.api.name, postPackage, function(data, status) {
       Cookie.setCookie("apikey", $("#apikey").val());
       $("#status").text(status.toUpperCase());
-      $("#results").val(data.results);
+      $("#results").val(JSON.stringify(JSON.parse(data.results), null, 2));
+      $("#apikey").defaultValue = $("#apikey").val();
       $target.prop("disabled", false);
       $target.toggleClass("disabled");
   }).error(function(err) {
@@ -75,6 +77,8 @@ var Page = React.createClass({
   },
   componentDidUpdate: function() {
     $("#imageurl").keyup(loadUrl);
+    $("#status").text(" ?");
+    $("#results").val("");
   },
   render: function() {
     var _this = this;
@@ -82,7 +86,7 @@ var Page = React.createClass({
       return (
         <button id={key} onClick={_this.removeKey}>{key}
           :
-          {_this.state[key]}</button>
+          {_this.state.keyargs[key]}</button>
       )
     };
 
@@ -114,6 +118,7 @@ var Page = React.createClass({
 
     return (
       <div className="page">
+        <a target="_blank" href="https://indico.io/register">Need an API key?</a>
         <h1>{this.props.api.title}</h1>
         <a target="_blank" href={
             this.props.api.type === "text"
@@ -146,7 +151,7 @@ var Page = React.createClass({
         </h5>
         <textarea id="results" readOnly rows="1" wrap="soft"></textarea>
         <div className="footer">
-            <input id="apikey" placeholder="Enter Your API Key" type="text" value={Cookie.getCookie("apikey")}></input>
+            <input id="apikey" placeholder="Enter Your API Key" type="text" defaultValue={Cookie.getCookie("apikey")}></input>
             <input id="cloud" placeholder="Cloud (optional)" type="text"></input>
           <button className="submit" id="submit" onClick={this.callAPI}>Run</button>
         </div>
