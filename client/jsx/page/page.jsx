@@ -1,4 +1,5 @@
 var Dropzone = require("./dropzone.jsx");
+var Cookie = require("./cookie");
 
 var FR = new FileReader();
 FR.onload = function(e) {
@@ -24,6 +25,10 @@ var Page = React.createClass({
   },
   callAPI: function(e) {
     var $target = $(e.target);
+    if ($("#apikey").val() === "") {
+        $("#apikey").focus();
+        return;
+    }
     $target.prop('disabled', true);
     $target.toggleClass("disabled");
 
@@ -35,6 +40,7 @@ var Page = React.createClass({
     postPackage["key"] = $("#apikey").val();
 
     $.post("/api/" + this.props.api.name, postPackage, function(data, status) {
+      Cookie.setCookie("apikey", $("#apikey").val());
       $("#status").text(status.toUpperCase());
       $("#results").val(data.results);
       $target.prop("disabled", false);
@@ -109,6 +115,11 @@ var Page = React.createClass({
     return (
       <div className="page">
         <h1>{this.props.api.title}</h1>
+        <a target="_blank" href={
+            this.props.api.type === "text"
+            ? "https://indico.io/docs#text"
+            : "https://indico.io/docs#image"
+          }>More Info</a>
         <p>
           <span>
             REQUEST
@@ -135,8 +146,8 @@ var Page = React.createClass({
         </h5>
         <textarea id="results" readOnly rows="1" wrap="soft"></textarea>
         <div className="footer">
-          <input id="apikey" placeholder="API Key" type="text"></input>
-          <input id="cloud" placeholder="Cloud" type="text"></input>
+            <input id="apikey" placeholder="Enter Your API Key" type="text" value={Cookie.getCookie("apikey")}></input>
+            <input id="cloud" placeholder="Cloud (optional)" type="text"></input>
           <button className="submit" id="submit" onClick={this.callAPI}>Run</button>
         </div>
       </div>
