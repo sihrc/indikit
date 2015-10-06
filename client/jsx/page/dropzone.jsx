@@ -1,6 +1,5 @@
-var accept = require('attr-accept');
+var accept = require("attr-accept");
 var Dropzone = React.createClass({
-
   getDefaultProps: function() {
     return {
       disableClick: false,
@@ -42,13 +41,12 @@ var Dropzone = React.createClass({
   onDragEnter: function(e) {
     e.preventDefault();
 
-// This is tricky. During the drag even the dataTransfer.files is null
-// But Chrome implements some drag store, which is accesible via dataTransfer.items
-    var dataTransferItems = e.dataTransfer && e.dataTransfer.items
-      ? e.dataTransfer.items
-      : [];
+    // This is tricky. During the drag even the dataTransfer.files is null
+    // But Chrome implements some drag store, which is accesible via dataTransfer.items
+    var dataTransferItems =
+      e.dataTransfer && e.dataTransfer.items ? e.dataTransfer.items : [];
 
-// Now we need to convert the DataTransferList to Array
+    // Now we need to convert the DataTransferList to Array
     var itemsArray = Array.prototype.slice.call(dataTransferItems);
     var allFilesAccepted = this.allFilesAccepted(itemsArray);
 
@@ -86,16 +84,9 @@ var Dropzone = React.createClass({
       isDragActive: false,
       isDragReject: false
     });
-    console.log(e.target.files);
-    console.log(e.dataTransfer);
-    var droppedFiles = e.dataTransfer
-      ? e.dataTransfer.files
-      : e.target.files;
-    var max = this.props.multiple
-      ? droppedFiles.length
-      : 1;
+    var droppedFiles = e.dataTransfer ? e.dataTransfer.files : e.target.files;
+    var max = this.props.multiple ? droppedFiles.length : 1;
     var files = [];
-    console.log("DROPPED", droppedFiles[0]);
     for (var i = 0; i < max; i++) {
       var file = droppedFiles[i];
       file.preview = URL.createObjectURL(file);
@@ -130,20 +121,18 @@ var Dropzone = React.createClass({
   },
 
   render: function() {
-
     var className;
     if (this.props.className) {
       className = this.props.className;
       if (this.state.isDragActive) {
-        className += ' ' + this.props.activeClassName;
-      };
+        className += " " + this.props.activeClassName;
+      }
       if (this.state.isDragReject) {
-        className += ' ' + this.props.rejectClassName;
-      };
-    };
+        className += " " + this.props.rejectClassName;
+      }
+    }
 
-    var style,
-      activeStyle;
+    var style, activeStyle;
     if (this.props.style || this.props.activeStyle) {
       if (this.props.style) {
         style = this.props.style;
@@ -156,13 +145,13 @@ var Dropzone = React.createClass({
         width: 200,
         height: 200,
         borderWidth: 2,
-        borderColor: '#666',
-        borderStyle: 'dashed',
+        borderColor: "#666",
+        borderStyle: "dashed",
         borderRadius: 5
       };
       activeStyle = {
-        borderStyle: 'solid',
-        backgroundColor: '#eee'
+        borderStyle: "solid",
+        backgroundColor: "#eee"
       };
     }
 
@@ -171,18 +160,32 @@ var Dropzone = React.createClass({
       $.extend(appliedStyle, style, activeStyle);
     } else {
       appliedStyle = style;
-    };
+    }
 
     return (
-      <div className={className} onClick={this.onClick} onDragEnter={this.onDragEnter} onDragLeave={this.onDragLeave} onDragOver={this.onDragOver} onDrop={this.onDrop} style={appliedStyle}>
+      <div
+        className={className}
+        onClick={this.onClick}
+        onDragEnter={this.onDragEnter}
+        onDragLeave={this.onDragLeave}
+        onDragOver={this.onDragOver}
+        onDrop={this.onDrop}
+        style={appliedStyle}
+      >
         {this.props.children}
-        <input accept={this.props.accept} multiple={this.props.multiple} onChange={this.onDrop} ref='fileInput' style={{
-          display: 'none'
-        }} type='file'></input>
+        <input
+          accept={this.props.accept}
+          multiple={this.props.multiple}
+          onChange={this.onDrop}
+          ref="fileInput"
+          style={{
+            display: "none"
+          }}
+          type="file"
+        />
       </div>
     );
   }
-
 });
 
 module.exports = Dropzone;

@@ -1,5 +1,5 @@
 #!/bin/bash
 . /root/.bashrc
-nvm use 0.12.7
-forever start -l /indikit/out.log /indikit/app.js
-forever logs 0 -f
+nvm use 4.0.0
+gulp dev&
+tail -Fq /dev/null
