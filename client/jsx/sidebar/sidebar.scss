@@ -1,0 +1,46 @@
+.sidebar-wrapper {
+  display:flex;
+  flex-direction:column;
+  order: -1;
+  background: $bg-blue;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.nav-sidebar {
+  li a {
+    color: $text-light;
+    letter-spacing: .05em;
+    white-space: nowrap ;
+  }
+
+  li a:hover {
+    color: $bg-blue;
+    cursor: pointer;
+  }
+
+  .tier-1 a {
+    font-size: 1.3em;
+    color: $text-dark;
+  }
+  .tier-1 a:hover {
+    background: $bg-blue;
+    color: $text-dark;;
+    cursor: default;
+  }
+  .tier-2:hover {
+    background: $text-light;
+    border-left: 20px solid $text-light;
+    border-right: 20px solid $text-light;
+  }
+  .tier-2 {
+    background: $bg-blue;
+    border-left: 20px solid $bg-blue;
+    border-right: 20px solid $bg-blue;
+  }
+  .active {
+    background: $bg-blue;
+    color: $text-dark;;
+    cursor: default;
+  }
+}

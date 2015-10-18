@@ -1,6 +1,9 @@
 Router = window.ReactRouter;
 Route = window.ReactRouter.Route;
 RouteHandler = window.ReactRouter.RouteHandler;
+_ = require("lodash");
+
+var Main = require("../main/main.jsx");
 
 var App = React.createClass({
   render: function() {
@@ -12,6 +15,7 @@ var App = React.createClass({
 
 var routes = (
   <Route handler={App}>
+    <Route path="/" handler={Main}></Route>
   </Route>
 );
 
