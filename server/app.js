@@ -6,7 +6,7 @@ var app = express();
 
 // Add Static Resources
 var path = require("path");
-app.use(express.static(path.join(__dirname, "public")))
+app.use(express.static(path.join(__dirname, "dist")))
 
 // Add Middleware and Routing
 require("./middleware")(app);
@@ -18,7 +18,7 @@ var server = app.listen(PORT, "0.0.0.0", function () {
     var address = server.address();
 
     console.log(
-      "IndiKit is listening at http://%s:%s",
+      "Server is listening at http://%s:%s",
       address.host || "localhost",
       address.port
     );
