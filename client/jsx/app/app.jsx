@@ -1,22 +1,22 @@
-var React = require('react'),
-    ReactDOM = require('react-dom');
-
-var SideBar = require("../sidebar/sidebar.jsx"),
-    Input = require("../input/input.jsx"),
-    Output = require("../output/output.jsx");
+Router = window.ReactRouter;
+Route = window.ReactRouter.Route;
+RouteHandler = window.ReactRouter.RouteHandler;
 
 var App = React.createClass({
   render: function() {
-    <div className="indikit-main">
-      <SideBar />
-      <Input />
-      <Output />
-    </div>
+    return (
+      <RouteHandler/>
+    );
   }
-})
+});
 
-
-ReactDOM.render(
-  <App />,
-  document.getElementById('container')
+var routes = (
+  <Route handler={App}>
+  </Route>
 );
+
+Router.run(routes, function (Handler) {
+  React.render(<Handler />, document.getElementById("container"));
+});
+
+module.exports = App;

@@ -6,7 +6,7 @@ var app = express();
 
 // Add Static Resources
 var path = require("path");
-app.use(express.static(path.join(__dirname, "dist")))
+app.use(express.static(path.join(__dirname, "..", "dist")))
 
 // Add Middleware and Routing
 require("./middleware")(app);

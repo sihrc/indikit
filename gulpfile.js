@@ -4,9 +4,10 @@ var gulp = require("gulp");
 var buffer = require("vinyl-buffer"),
     gulpif = require("gulp-if"),
     gulpsync = require('gulp-sync')(gulp),
+    assign = require('lodash.assign')
     rename = require("gulp-rename"),
     source = require("vinyl-source-stream"),
-    util = require("gulp-util"),
+    gutil = require("gulp-util"),
 
     //SASS
     autoprefixer = require("autoprefixer"),
@@ -18,52 +19,54 @@ var buffer = require("vinyl-buffer"),
     //BROWSERIFY
     browserify = require("browserify"),
     reactify = require("reactify"),
-    uglify = require("gulp-uglify")
+    sourcemaps = require('gulp-sourcemaps'),
+    uglify = require("gulp-uglify"),
+    watchify = require("watchify"),
 
     // Running
-    nodemon = require("gulp-nodemon");
+    nodemon = require("gulp-nodemon"),
     mocha = require("gulp-mocha");
 
 
 
 
 PATHS = {
-  "INDEX_SRC": gulp.src("client/index.html"),
-  "INDEX_DST": gulp.dest("dist"),
+  "INDEX_SRC": "client/index.html",
+  "INDEX_DST": "dist",
 
-  "IMAGE_SRC": gulp.src("client/images/*"),
-  "IMAGE_DST": gulp.dest("dist/images"),
+  "IMAGE_SRC": "client/images/*",
+  "IMAGE_DST": "dist/images",
 
-  "SASS_FLATTEN_SRC": gulp.src("client/jsx/**/*.scss", { base: "src" }),
-  "SASS_FLATTEN_DST": gulp.dest("client/scss/.components"),
+  "SASS_FLATTEN_SRC": "client/jsx/**/*.scss",
+  "SASS_FLATTEN_DST": "client/scss/.components",
 
-  "SASS_COMPILE_SRC": gulp.src("client/scss/style.scss"),
-  "SASS_COMPILE_DST": gulp.dest("dist"),
+  "SASS_COMPILE_SRC": "client/scss/style.scss",
+  "SASS_COMPILE_DST": "dist",
 
   "BROWSERIFY_SRC": "client/js/script.js", //Entry Point
   "BROWSERIFY_FILE": "script.js",
-  "BROWSERIFY_DST": gulp.dest("dist"),
+  "BROWSERIFY_DST": "dist",
 
   "WATCH_HTML": "client/index.html",
   "WATCH_SASS": ["client/jsx/**/*.scss", "client/sass/**/*.scss"],
   "WATCH_JSX": "client/jsx/**/*.jsx",
 
-  "TEST": gulp.src("test.js", {read: false})
+  "TEST": "test.js"
 }
 
 // Copy Files for Dist
 gulp.task("copy", function() {
-  PATHS.INDEX_SRC
-    .pipe(PATHS.INDEX_DST);
-  PATHS.IMAGE_SRC
-    .pipe(PATHS.IMAGE_DST);
+  gulp.src(PATHS.INDEX_SRC)
+    .pipe(gulp.dest(PATHS.INDEX_DST));
+  gulp.src(PATHS.IMAGE_SRC)
+    .pipe(gulp.dest(PATHS.IMAGE_DST));
 });
 
 gulp.task("sass:components", function() {
   // Flatten components
-  PATHS.SASS_FLATTEN_SRC
+  gulp.src(PATHS.SASS_FLATTEN_SRC)
     .pipe(flatten())
-    .pipe(PATHS.SASS_FLATTEN_DST);
+    .pipe(gulp.dest(PATHS.SASS_FLATTEN_DST));
 });
 
 // Compile SASS
@@ -74,24 +77,45 @@ gulp.task("sass:compile", function() {
    })
   ];
 
-  PATHS.SASS_COMPILE_SRC
+  gulp.src(PATHS.SASS_COMPILE_SRC)
     .pipe(sass().on("error", sass.logError))
     .pipe(postcss(processors))
     .pipe(minifycss())
-    .pipe(PATHS.SASS_COMPILE_DST);
+    .pipe(gulp.dest(PATHS.SASS_COMPILE_DST));
 });
 
+
+/**
+FASTER BROWSERIFY
+**/
+// set up the browserify instance
+var b = watchify(browserify(
+  assign({}, watchify.args, {
+     // add custom browserify options here
+      entries: PATHS.BROWSERIFY_SRC,
+      debug: true,
+      // defining transforms here will avoid crashing your stream
+      transform: [reactify]
+  })
+));
+
 // Compile jsx into Javascript.
-gulp.task("browserify", function() {
-  var b = browserify();
-  b.transform(reactify); // Use the reactify transform.
-  b.add(PATHS.BROWSERIFY_SRC);
+var bundle = function() {
   return b.bundle()
+  // log errors if they happen
+    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
     .pipe(source(PATHS.BROWSERIFY_FILE))
     .pipe(buffer())
-    .pipe(uglify().on("error", util.log))
-    .pipe(PATHS.BROWSERIFY_DST);
-});
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(uglify().on("error", gutil.log))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest(PATHS.BROWSERIFY_DST));
+};
+
+b.on('update', bundle); // on any dep update, runs the bundler
+b.on('log', gutil.log); // output build logs to terminal
+
+gulp.task("browserify", bundle);
 
 // Run Server
 gulp.task("nodemon", function() {
@@ -108,13 +132,13 @@ gulp.task("nodemon", function() {
 // Watch
 gulp.task("watch", function() {
   gulp.watch(PATHS.WATCH_HTML, ["copy"]);
-  gulp.watch(PATHS.SASS, ["sass"]);
-  gulp.watch(PATHS.JSX, ["browserify"]);
+  gulp.watch(PATHS.WATCH_SASS, gulpsync.sync(["sass:components", "sass:compile"]));
+  // Browserify is already watchified
 });
 
 // Tests
 gulp.task("test", function() {
-  PATHS.TEST
+  gulp.src(PATHS.TEST)
     .pipe(mocha({
         "reporter": "nyan"
       })).once("error", function () {
@@ -127,4 +151,4 @@ gulp.task("test", function() {
 
 gulp.task("build", gulpsync.async(["copy", ["sass:components", "sass:compile"], "browserify"]));
 gulp.task("pre-commit", ["test", "build"]);
-gulp.task("default", gulpsync.sync(["build", "watch", "nodemon"]));
+gulp.task("default", gulpsync.sync(["build", ["nodemon", "watch"]]));
