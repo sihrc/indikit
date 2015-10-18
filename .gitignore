@@ -1,0 +1,6 @@
+# NPM
+node_modules
+
+# Dev / Deploy Temp folders
+.env
+.components

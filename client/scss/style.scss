@@ -1,0 +1,9 @@
+// Don't forget to import your newly creating .scss files here.
+// Don't include the .scss in the end.
+// Vendors.
+// Helpers.
+@import "helpers/shadows";
+@import "helpers/colors";
+
+// Components.
+@import ".components/app"
