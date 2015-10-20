@@ -1,5 +1,6 @@
 var APIS = require("./api.jsx");
 var Sidebar = require("../sidebar/sidebar.jsx");
+var ApiForm = require("../apiform/apiform.jsx");
 
 var Main = React.createClass({
   getInitialState: function() {
@@ -20,6 +21,7 @@ var Main = React.createClass({
     return (
       <div className="main page-with-sidebar page-sidebar-expanded">
         <Sidebar apis={APIS} itemClickHandler={this.clickedApi}/>
+        <ApiForm api={this.state.api}/>
       </div>
     )
   }

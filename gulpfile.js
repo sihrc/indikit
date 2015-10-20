@@ -48,7 +48,7 @@ PATHS = {
   "BROWSERIFY_DST": "dist",
 
   "WATCH_HTML": "client/index.html",
-  "WATCH_SASS": ["client/jsx/**/*.scss", "client/sass/**/*.scss"],
+  "WATCH_SASS": ["client/jsx/**/*.scss", "client/sass/**/*.scss", "client/scss/**/*.scss"],
   "WATCH_JSX": "client/jsx/**/*.jsx",
 
   "TEST": "test.js"
