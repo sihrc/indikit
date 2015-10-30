@@ -2,7 +2,7 @@
 sudo docker build -t indikit /indikit
 
 # kill all old processes
-DOCKER_INSTANCES=$(sudo docker ps -q)
+DOCKER_INSTANCES=$(sudo docker ps | grep indikit | awk '{print $1}')
 if [ -n "$DOCKER_INSTANCES" ]
 then
   sudo docker kill $DOCKER_INSTANCES
