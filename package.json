@@ -44,7 +44,7 @@
     "indico.io": "^0.10.6",
     "morgan": "^1.9.1",
     "path": "^0.12.7",
-    "react": "^0.13.3",
+    "react": "^16.13.1",
     "reactify": "^1.1.1",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^1.1.2"
